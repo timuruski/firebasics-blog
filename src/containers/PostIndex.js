@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import lodash from 'lodash'
 import { connect } from 'react-redux'
 
 // import { PostSubscription } from '../somewhere'
@@ -37,8 +38,22 @@ class PostIndex extends Component {
   }
 
   render () {
-    return (<div>The list of posts...</div>);
+    const toPostLink = (data) => {
+      return (<li>{ data.title }</li>)
+    }
+
+    return (
+      <ul>
+        { lodash.map(this.props.posts, toPostLink) }
+      </ul>
+    );
   }
 }
 
-export default connect()(PostIndex)
+function mapStateToProps (state) {
+  return {
+   posts: state.posts
+  }
+}
+
+export default connect(mapStateToProps)(PostIndex)

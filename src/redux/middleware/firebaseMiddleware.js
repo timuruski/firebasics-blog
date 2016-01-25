@@ -7,23 +7,30 @@ function addSubscriber (channel, dispatch) {
   if(subscriptions[channel]) return;
 
   const ref = new Firebase(url + '/' + channel)
+    .orderByChild('published')
+    .equalTo(true)
+
   ref.on('child_added', function (snapshot) {
     const action = {
       type: 'PostAdded',
+      id: snapshot.key(),
       data: snapshot.val()
     }
     dispatch(action)
   })
+
   ref.on('child_removed', function (snapshot) {
     const action = {
       type: 'PostRemoved',
-      data: snapshot.val()
+      id: snapshot.key()
     }
     dispatch(action)
   })
+
   ref.on('child_changed', function (snapshot) {
     const action = {
       type: 'PostUpdated',
+      id: snapshot.key(),
       data: snapshot.val()
     }
     dispatch(action)
